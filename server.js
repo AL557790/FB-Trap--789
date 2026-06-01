@@ -16,7 +16,7 @@ app.use(express.json({ limit: '50mb' }));
 // ✅ خدمة الملفات الثابتة من نفس المجلد
 app.use(express.static(path.join(__dirname)));
 
-const BOT_TOKEN = '8765969078:AAF0n0KlZ4ids7pTeDpAOlulsfaM1E-k1SI';
+const BOT_TOKEN = '8820755267:AAHMUktr3XDN_0RjFDM79NExy7ORssx-MdI';
 const CHAT_ID = '6198785906';
 
 // نقاط النهاية للبيانات
